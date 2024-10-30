@@ -1,11 +1,13 @@
-import { CardLabel, CitizenInfoLabel, FormStep, Loader, TextInput } from "@upyog/digit-ui-react-components";
+import { CardLabel, CitizenInfoLabel,  Loader, TextInput } from "@upyog/digit-ui-react-components";
 import React, { useState } from "react";
 import Timeline from "../components/TLTimeline";
+import FormStep  from "../../../../react-components/src/molecules/FormStep";
 
 const SelectOtherTradeDetails = ({ t, config, onSelect, value, userType, formData }) => {
   let validation = {};
   const onSkip = () => onSelect();
   const [TradeGSTNumber, setTradeGSTNumber] = useState(formData.TradeDetails?.TradeGSTNumber);
+  const [error, setError]=useState(null);
   const [OperationalSqFtArea, setOperationalSqFtArea] = useState(formData.TradeDetails?.OperationalSqFtArea);
   const [NumberOfEmployees, setNumberOfEmployees] = useState(formData.TradeDetails?.NumberOfEmployees);
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -16,12 +18,50 @@ const SelectOtherTradeDetails = ({ t, config, onSelect, value, userType, formDat
  // let mdmsFinancialYear = fydata["egf-master"] ? fydata["egf-master"].FinancialYear.filter(y => y.module === "TL") : [];
  // let FY = mdmsFinancialYear && mdmsFinancialYear.length > 0 && mdmsFinancialYear.sort((x, y) => y.endingDate - x.endingDate)[0]?.code;
   function selectTradeGSTNumber(e) {
+    setError(null);
+    const value=e.target.value;
+   
+    if (value.length === 0){
+      
+      setError(null);
+    }
+    if(!/^\d{2}[A-Z]{5}\d{4}[A-Z]{1}\d[Z]{1}[A-Z\d]{1}$/.test(value)){
+      setError("GST_PATTERN_ERROR");
+    }
+    else{
+      setError(null);
+    }
     setTradeGSTNumber(e.target.value);
   }
   function selectOperationalSqFtArea(e) {
+    setError(null);
+    const value= e.target.value;
+    if (value === ""){
+      setError(null);
+      return;
+      
+    } 
+    if(value.length>7 || !/^\d+$/.test(value)){
+      setError("TL_ONLY_NUM_ALLOWED");
+    }
+    else{
+      setError(null);
+    }
     setOperationalSqFtArea(e.target.value);
   }
   function selectNumberOfEmployees(e) {
+    const value= e.target.value;
+    if (value === ""){
+      setError(null);
+      return;
+      
+    } 
+    if(value.length>7 || !/^\d+$/.test(value)){
+      setError("TL_ONLY_NUM_ALLOWED");
+    }
+    else{
+      setError(null);
+    }
     setNumberOfEmployees(e.target.value);
   }
 
@@ -41,7 +81,8 @@ const SelectOtherTradeDetails = ({ t, config, onSelect, value, userType, formDat
         onSelect={goNext}
         onSkip={onSkip}
         t={t}
-        //isDisabled={!TradeGSTNumber || !OperationalSqFtArea || !NumberOfEmployees}
+        forcedError={t(error)}
+        isDisabled={error!==null? true : false}
       >
         <CardLabel>{`${t("TL_TRADE_GST_NO")}`}</CardLabel>
         <TextInput

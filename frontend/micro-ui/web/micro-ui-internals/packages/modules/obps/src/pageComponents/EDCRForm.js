@@ -22,6 +22,15 @@ const EDCRForm = ({ t, config, onSelect, userType, formData, ownerIndex = 0, add
 
 
     function setApplicantName(e) {
+        const value=e.target.value;
+        setError(null);
+        if(!/^[a-zA-Z ]+$/.test(value)){
+           
+            setError(t("APPLICANT_NAME_INVALID_PATTERN"))
+        }
+        else{
+            setError(null);
+        }
         setName(e.target.value);
     }
     function setCoreArea(value) {
@@ -121,6 +130,7 @@ const EDCRForm = ({ t, config, onSelect, userType, formData, ownerIndex = 0, add
             config={config}
             onSelect={handleSubmit}
             onSkip={onSkip}
+            forcedError={error}
             isDisabled={!tenantIdData || !name || !coreArea || !file || isSubmitBtnDisable}
             onAdd={onAdd}
             isMultipleAllow={true}

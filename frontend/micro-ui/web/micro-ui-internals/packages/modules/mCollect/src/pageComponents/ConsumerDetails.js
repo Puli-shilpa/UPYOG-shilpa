@@ -207,7 +207,7 @@ const OwnerForm1 = (_props) => {
           control={control}
           name="emailId"
           defaultValue={consumerdetail?.emailId}
-          rules={{  validate: { pattern: (val) => (/[A-Za-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(val) ? true : t("CS_ADDCOMPLAINT_EMAIL_ERROR")) } }}
+          rules={{  validate: { pattern: (val) => (/^[a-zA-Z0-9._%+-]+@[a-z.-]+\.(com|org|in)$/.test(val) ? true : t("CS_ADDCOMPLAINT_EMAIL_ERROR")) } }}
           render={(props) => (
             <TextInput
               t={t}
@@ -220,6 +220,7 @@ const OwnerForm1 = (_props) => {
             />
             )}
             />
+            {formData?.consomerDetails1 && formData?.consomerDetails1[0]?.emailId && errors && <span style={{color:"red"}}>{errors?.emailId?.message}</span>}
             </div>
             </LabelFieldPair>  
       </div>
